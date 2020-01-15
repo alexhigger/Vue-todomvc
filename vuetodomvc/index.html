@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>VUE入门项目 • TodoMVC</title>
+	<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+	<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+	<!-- CSS overrides - remove if you don't need it -->
+	<link rel="stylesheet" href="css/app.css">
+
+</head>
+
+<body>
+	<section class="todoapp" id="todoapp">
+		<header class="header">
+			<h1>VUE入门项目-todomvc</h1>
+			<!--添加任务 -->
+			<input @keyup.enter="addItem"
+			class="new-todo" placeholder="在这输入想增加的字符" v-app-focus>
+		</header>
+		<!-- This section should be hidden by default and shown when there are todos -->
+		<!--items.length当值为0时，表示false，则不显示  -->
+		<!-- template元素，页面渲染之后这和template元素就不会有 ,需要与v-if连用-->
+		<template v-if="items.length"></template>
+			<section class="main">
+				<input v-model="toggleAll" id="toggle-all" class="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<ul class="todo-list">
+					<!-- These are here just to show the structure of the list items -->
+					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+					<li v-for="(item,index) in filterItems" :class="{completed: item.completed , editing: item === currentItem}">
+						<div class="view">
+							<input class="toggle" type="checkbox" v-model="item.completed">
+							<label @dblclick="toEdit(item)">{{item.content}}</label>
+							<button class="destroy" :value="item.id" @click="removeItem(index)"></button>
+						</div>
+						<input  v-todo-focus="item === currentItem" @keyup.enter="finishEdit(item,index,$event)" @blur="finishEdit(item,index,$event)"
+						@keyup.esc="cancelEdit" class="edit" :value="item.content">
+					</li>
+				</ul>
+			</section>
+			<!-- This footer should hidden by default and shown when there are todos -->
+			<footer class="footer">
+				<!-- This should be `0 items left` by default -->
+				<span class="todo-count"><strong>{{remaining}}</strong> item{{ remaining === 1 ? '' : 's'}} left</span>
+				<!-- Remove this if you don't implement routing -->
+				<ul class="filters">
+					<li>
+						<!-- 原来样式class="selected"只有all有被选中样式，现在要用动态样式 -->
+						<a :class="{selected: filterStatus === 'all'}" href="#/">All</a >
+					</li>
+					<li>
+						<a :class="{selected: filterStatus === 'active'}" href="#/active">Active</a>
+					</li>
+					<li>
+						<a :class="{selected: filterStatus === 'completed'}" href="#/completed">Completed</a>
+					</li>
+				</ul>
+				<!-- Hidden if no completed items are left ↓ -->
+				<!-- 当总任务数大于未完成任务数量，则显示下面按钮 -->
+				<button v-show="items.length > remaining"
+				 @click="removeCompleted" class="clear-completed">Clear completed</button>
+			</footer>
+		</template>
+	</section>
+	<footer class="info">
+		<!-- <p>Double-click to edit a todo</p> -->
+		<!-- Remove the below line ↓ -->
+		<!-- <a>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p> -->
+		<!-- Change this out with your name and url ↓ -->
+		<!-- <a>Created by <a href="http://todomvc.com">you</a></p> -->
+		<!-- <a>Part of <a href="http://todomvc.com">TodoMVC</a></p> -->
+		<p>-----------------------------------------------------------------------------------</p>
+			<h2>可实现功能：</h2>
+				<span >1、第一次打开就自动鼠标焦点在输入框<br>
+					2、在输入框输入字符串，下面自动新增记录且里面有刚刚新增的字符串<br>
+					3、双击某一项，可进入编辑模式，且自动焦点在此条数据</span><br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ps：修改后<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp2.1 按esc键会退出编辑状态并且不会保存<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp2.2 按enter或将鼠标点击空白处，会自动保存<br>
+					4、单击某条记录前空白处，会显示已选中，可单击后面❌号删除此条记录<br>
+					5、左下角会计算出未被选中的记录<br>
+					6、单击下面3个按钮可实现上方显示出对应条件的记录<br>
+					7、右下角可将选中数据批量删除<br>
+				</span>
+	
+				
+
+	</footer>
+	<!-- Scripts here. Don't remove ↓ -->
+	<script src="./node_modules/vue/dist/vue.js"></script>
+	<script src="node_modules/todomvc-common/base.js"></script>
+	<script src="js/app.js"></script>
+</body>
+
+</html>
